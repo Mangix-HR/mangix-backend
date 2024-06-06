@@ -4,10 +4,14 @@ exports.buildRouter = function (
   RouterInstance,
   routes,
   controller,
-  middleware = []
+  middlewareList = []
 ) {
-  routes.forEach(({ method, path, action }) => {
-    RouterInstance[method](path, ...middleware, controller[action]);
+  routes.forEach(({ method, path, action, middleware = [] }) => {
+    RouterInstance[method](
+      path,
+      ...new Set([...middlewareList, ...middleware]),
+      controller[action]
+    );
   });
 
   return RouterInstance;
