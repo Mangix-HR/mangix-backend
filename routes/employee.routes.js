@@ -14,6 +14,23 @@ const employeeRoutes = [
     middleware: [checkAdmin],
   },
   { path: "/employee/:id?", method: "get", action: "read" },
+  {
+    path: "/employee",
+    method: "post",
+    action: "create",
+    middleware: [checkAdmin],
+  },
+  {
+    path: "/employee/:id?",
+    method: "patch",
+    action: "update",
+  },
+  {
+    path: "/employee/account/:id",
+    method: "patch",
+    action: "updateAccount",
+    middleware: [checkAdmin],
+  },
   // {
   //   path: "/employees/create",
   //   method: "post",
