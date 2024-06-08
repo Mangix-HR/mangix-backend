@@ -1,8 +1,8 @@
 const express = require("express");
 const { buildRouter } = require("../utils/route-builder");
 const AdminController = require("../controllers/admin.controller");
-const { checkAdmin } = require("../middleware/checkAdmin");
-const { checkAuth } = require("../middleware/checkAuth");
+const { checkAdmin } = require("../middleware/checkAdmin.middleware");
+const { checkAuth } = require("../middleware/checkAuth.middleware");
 
 const router = express.Router();
 
@@ -13,9 +13,9 @@ const adminRoutes = [
   // { path: "/admin/search", method: "get", action: "search" },
   { path: "/admin/list", method: "get", action: "list" },
 ];
-const AdminRoutes = buildRouter(router, adminRoutes, AdminController, [
+const Admin = buildRouter(adminRoutes, AdminController, [
   checkAuth,
   checkAdmin,
 ]);
 
-module.exports = AdminRoutes;
+module.exports = Admin;

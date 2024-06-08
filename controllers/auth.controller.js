@@ -33,21 +33,24 @@ class AuthController {
   static async login(req, res) {
     try {
       const { email, password } = req.body;
-      const { data, error } = await loginUser(email, password);
+      const {
+        data: { session },
+        error,
+      } = await loginUser(email, password);
 
       if (error) {
         throw new AuthApiError(...error);
       }
 
-      res.cookie("sb-access-token", data.session.access_token, {
+      res.cookie("sb-access-token", session.access_token, {
         httpOnly: true,
       });
-      res.cookie("sb-refresh-token", data.session.refresh_token, {
+      res.cookie("sb-refresh-token", session.refresh_token, {
         httpOnly: true,
       });
 
       return res.status(200).json({
-        data,
+        session,
         message: "User Created succesfully",
       });
     } catch ({ status, message }) {

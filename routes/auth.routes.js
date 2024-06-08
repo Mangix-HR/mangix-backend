@@ -12,8 +12,6 @@ const authRoutes = [
   { path: "/auth/session", method: "get", action: "session" },
 ];
 
-const AuthRoutes = buildRouter(router, authRoutes, AuthController);
+const Auth = buildRouter(authRoutes, AuthController);
 
-module.exports = {
-  AuthRoutes,
-};
+module.exports = Auth;

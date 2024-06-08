@@ -1,10 +1,9 @@
 const express = require("express");
-const { checkAdmin } = require("../middleware/checkAdmin");
+const { checkAdmin } = require("../middleware/checkAdmin.middleware");
 const { buildRouter } = require("../utils/route-builder");
 const EmployeeController = require("../controllers/employee.controller");
-const { checkAuth } = require("../middleware/checkAuth");
-
-const router = express.Router();
+const { checkAuth } = require("../middleware/checkAuth.middleware");
+const { checkUser } = require("../middleware/checkUser.middleware");
 
 const employeeRoutes = [
   {
@@ -29,6 +28,12 @@ const employeeRoutes = [
     path: "/employee/account/:id",
     method: "patch",
     action: "updateAccount",
+    middleware: [checkUser],
+  },
+  {
+    path: "/employee/account/:id",
+    method: "delete",
+    action: "delete",
     middleware: [checkAdmin],
   },
   // {
@@ -39,8 +44,6 @@ const employeeRoutes = [
   // },
 ];
 
-const Employee = buildRouter(router, employeeRoutes, EmployeeController, [
-  checkAuth,
-]);
+const Employee = buildRouter(employeeRoutes, EmployeeController, [checkAuth]);
 
 module.exports = Employee;

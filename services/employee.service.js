@@ -1,4 +1,4 @@
-const { AuthError } = require("@supabase/supabase-js");
+const { ApiError } = require("../handlers/error.handler");
 const { supabase } = require("../lib/supabase");
 
 exports.employeeList = async function () {
@@ -14,45 +14,41 @@ exports.getEmployee = async function (userId) {
 };
 
 exports.createEmployee = async function ({
-  full_name,
   email,
   password,
   phone,
-  cpf,
-  pin,
-  role,
+  ...user_data
 }) {
-  const { data: newUser, error: newUserError } =
-    await supabase.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true,
-      phone,
-      phone_confirm: true,
-      user_metadata: {
-        full_name,
-        cpf,
-      },
-    });
+  const { data, error } = await supabase.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    phone,
+    phone_confirm: true,
+    user_metadata: {
+      ...user_data,
+    },
+  });
 
-  if (newUserError) {
-    return {
-      error: newUserError,
-      data: null,
-    };
-  }
+  // const { error } = await supabase.rpc("handle_create_register", {
+  //   id: newUser.user.id,
+  // });
 
-  return await supabase
-    .from("profiles")
-    .update({
-      full_name,
-      cpf,
-      pin,
-      role,
-    })
-    .eq("id", newUser.user.id)
-    .select()
-    .single();
+  // if (error) throw new ApiError(500, error.message);
+
+  // await supabase
+  //   .from("profiles")
+  //   .update({
+  //     cpf,
+  //     pin,
+  //     role,
+  //   })
+  //   .eq("id", data.user.id);
+
+  return {
+    data,
+    error,
+  };
 };
 
 exports.updateEmployee = async function (id, updateProperties) {
@@ -76,3 +72,24 @@ exports.updateEmployeeAccount = async function (
     password,
   });
 };
+
+exports.deleteUser = async function (id) {
+  return await supabase.auth.admin.deleteUser(id);
+};
+
+/*
+
+begin
+  INSERT INTO public.profiles (id, full_name, role, function, pin, cpf)
+  VALUES (
+    NEW.id,
+    NEW.raw_user_meta_data->>'full_name',
+    NEW.raw_user_meta_data->>'role',
+    NEW.raw_user_meta_data->>'function',
+    NEW.raw_user_meta_data->>'pin',
+    NEW.raw_user_meta_data->>'cpf'
+  );
+  RETURN NEW;
+end;
+
+*/

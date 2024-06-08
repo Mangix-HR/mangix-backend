@@ -1,11 +1,9 @@
+const express = require("express");
 const { catchErrors } = require("../handlers/error.handler");
 
-exports.buildRouter = function (
-  RouterInstance,
-  routes,
-  controller,
-  middlewareList = []
-) {
+exports.buildRouter = function (routes, controller, middlewareList = []) {
+  const RouterInstance = express.Router();
+
   routes.forEach(({ method, path, action, middleware = [] }) => {
     RouterInstance[method](
       path,

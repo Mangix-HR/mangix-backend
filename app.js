@@ -2,11 +2,12 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const { notFoundHandler } = require("./handlers/error.handler");
-const { AuthRoutes } = require("./routes/auth.routes");
 const cors = require("cors");
 const AdminRoutes = require("./routes/admin.routes");
-const { checkAuth } = require("./middleware/checkAuth");
 const Employee = require("./routes/employee.routes");
+const Auth = require("./routes/auth.routes");
+const Admin = require("./routes/admin.routes");
+const Pontos = require("./routes/pontos.routes");
 require("dotenv").config();
 
 const app = express();
@@ -18,11 +19,11 @@ app.use(cookieParser());
 
 app.use(cors());
 
-app.use(AuthRoutes);
-
-// app.use(checkAuth);
-app.use(AdminRoutes);
+// Routers
+app.use(Auth);
+app.use(Admin);
 app.use(Employee);
+app.use(Pontos);
 
 app.use(notFoundHandler);
 
