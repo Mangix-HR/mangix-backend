@@ -4,6 +4,7 @@ const {
   loginUser,
   logoutUser,
   validateSession,
+  getUserProfile,
 } = require("../services/auth.service");
 const { ApiError } = require("../handlers/error.handler");
 
@@ -38,8 +39,15 @@ class AuthController {
         error,
       } = await loginUser(email, password);
 
-      if (error) {
-        throw new AuthApiError(...error);
+      const { data: profile, error: profileError } = await getUserProfile(
+        session?.user.id
+      );
+
+      if (error || profileError) {
+        throw new ApiError(
+          error?.status ?? 403,
+          error?.message ?? profileError.message
+        );
       }
 
       res.cookie("sb-access-token", session.access_token, {
@@ -51,6 +59,7 @@ class AuthController {
 
       return res.status(200).json({
         session,
+        profile,
         message: "User Created succesfully",
       });
     } catch ({ status, message }) {
@@ -92,23 +101,20 @@ class AuthController {
 
   static async session(req, res) {
     try {
-      const session = await validateSession();
-
-      if (!session.data) {
-        throw new ApiError(402, "User is not logged in");
-      }
-
-      if (error) {
-        throw new AuthError(...error);
+      // const session = await validateSession();
+      const user = req.user;
+      if (!user) {
+        throw new ApiError(401, "User is not logged in");
       }
 
       return res.status(200).json({
-        ...session,
+        user,
         message: "User Session found",
       });
     } catch ({ status, message }) {
-      return res.status(status).json({
+      return res.status(status ?? 500).json({
         message,
+        error: true,
       });
     }
   }

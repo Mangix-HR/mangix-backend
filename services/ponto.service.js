@@ -48,3 +48,34 @@ exports.getTodaysPontos = async function (profileId) {
     .lte("ponto", endOfDay)
     .order("ponto", { ascending: true });
 };
+
+exports.getAllUserPontos = async function (profileId, ascending = true) {
+  const { data, error } = await getUserRegister(profileId);
+  if (error) throw new ApiError(500, error.message);
+
+  return await supabase
+    .from("pontos")
+    .select("*")
+    .eq("registroId", data.id)
+    .order("ponto", { ascending });
+};
+
+exports.getAllPontos = async function (ascending = true) {
+  return await supabase
+    .from("pontos")
+    .select("*")
+    .order("ponto", { ascending });
+};
+
+exports.editUserPonto = async function (pontoId, pontoEditData) {
+  return await supabase
+    .from("pontos")
+    .update(pontoEditData)
+    .eq("id", pontoId)
+    .select()
+    .single();
+};
+
+exports.deletePonto = async function (pontoId) {
+  return await supabase.from("pontos").delete().eq("id", pontoId);
+};

@@ -14,6 +14,10 @@ exports.registerUser = async function (email, password) {
   });
 };
 
+exports.getUserProfile = async function (id) {
+  return await supabase.from("profiles").select("*").eq("id", id).single();
+};
+
 exports.logoutUser = async function () {
   return await supabase.auth.signOut();
 };

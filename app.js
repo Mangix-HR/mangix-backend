@@ -17,7 +17,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-app.use(cors());
+const whitelist = ["http://localhost:5173"];
+
+app.use(
+  cors({
+    credentials: true,
+    origin: (origin, cb) => {
+      if (whitelist.includes(origin)) return cb(null, true);
+
+      cb(new Error("Not allowed by CORS"));
+    },
+  })
+);
 
 // Routers
 app.use(Auth);
