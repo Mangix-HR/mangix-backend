@@ -6,11 +6,25 @@ exports.employeeList = async function () {
 };
 
 exports.getEmployee = async function (userId) {
-  return await supabase
+  const {
+    data: {
+      user: { email, phone },
+    },
+  } = await supabase.auth.admin.getUserById(userId);
+  const userProfile = await supabase
     .from("profiles")
     .select("*")
-    .neq("role", "ADMIN")
-    .eq("id", userId);
+    .eq("id", userId)
+    .single();
+
+  // console.log(userAccount);
+  return {
+    data: {
+      ...userProfile.data,
+      email,
+      phone,
+    },
+  };
 };
 
 exports.createEmployee = async function ({
@@ -29,21 +43,6 @@ exports.createEmployee = async function ({
       ...user_data,
     },
   });
-
-  // const { error } = await supabase.rpc("handle_create_register", {
-  //   id: newUser.user.id,
-  // });
-
-  // if (error) throw new ApiError(500, error.message);
-
-  // await supabase
-  //   .from("profiles")
-  //   .update({
-  //     cpf,
-  //     pin,
-  //     role,
-  //   })
-  //   .eq("id", data.user.id);
 
   return {
     data,

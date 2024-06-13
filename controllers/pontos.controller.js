@@ -12,8 +12,8 @@ class PontosController {
   static async create(req, res) {
     try {
       console.log(req.user.id);
-      // const { id } = req.user;
-
+      // const { id } = req.user
+      console.log(req.body);
       const { data, error } = await createPonto(req.user.id, req.body);
 
       if (error) throw new ApiError(500, error.message);
@@ -83,7 +83,6 @@ class PontosController {
   static async update(req, res) {
     try {
       const { id } = req.params;
-
       const { data, error } = await editUserPonto(id);
 
       if (error) throw new ApiError(500, error.message);

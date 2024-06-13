@@ -34,6 +34,7 @@ class EmployeeController {
       const employeeId = req.params?.id ?? req?.user.id;
 
       const { data, error } = await getEmployee(employeeId);
+      console.log(data);
 
       if (error || data.length < 1) {
         throw new ApiError(500, error?.message ?? "No Employee Found");

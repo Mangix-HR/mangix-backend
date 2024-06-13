@@ -30,6 +30,8 @@ app.use(
   })
 );
 
+// app.use(cors());
+
 // Routers
 app.use(Auth);
 app.use(Admin);
