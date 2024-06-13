@@ -53,7 +53,9 @@ exports.createEmployee = async function ({
 exports.updateEmployee = async function (id, updateProperties) {
   return await supabase
     .from("profiles")
-    .update(updateProperties)
+    .update({
+      ...updateProperties,
+    })
     .eq("id", id)
     .select()
     .single();

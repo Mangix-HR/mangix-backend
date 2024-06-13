@@ -76,14 +76,9 @@ class EmployeeController {
   static async update(req, res) {
     try {
       const employeeId = req.params?.id ?? req?.user.id;
-      const { full_name, role, pin, cpf } = req.body;
 
-      const { data, error } = await updateEmployee(employeeId, {
-        full_name,
-        role,
-        pin,
-        cpf,
-      });
+      console.log(req.body);
+      const { data, error } = await updateEmployee(employeeId, req.body);
 
       if (error) {
         throw new ApiError(500, error.message);
@@ -103,11 +98,16 @@ class EmployeeController {
   static async updateAccount(req, res) {
     try {
       const employeeId = req.params?.id ?? req?.user.id;
+      const { email, phone, password } = req.body;
 
       const {
         data: { user },
         error,
-      } = await updateEmployeeAccount(employeeId, req.body);
+      } = await updateEmployeeAccount(employeeId, {
+        email,
+        phone,
+        password,
+      });
 
       if (error) {
         throw new ApiError(error.status, error.message);
