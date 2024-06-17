@@ -28,7 +28,6 @@ const employeeRoutes = [
     path: "/employee/account/:id",
     method: "patch",
     action: "updateAccount",
-    middleware: [checkUser],
   },
   {
     path: "/employee/account/:id",

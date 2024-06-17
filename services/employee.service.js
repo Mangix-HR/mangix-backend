@@ -57,8 +57,7 @@ exports.updateEmployee = async function (id, updateProperties) {
       ...updateProperties,
     })
     .eq("id", id)
-    .select()
-    .single();
+    .select();
 };
 
 exports.updateEmployeeAccount = async function (
